@@ -1,0 +1,25 @@
+{
+  "name": "tameofthrones",
+  "version": "1.0.0",
+  "description": "",
+  "main": "geektrust.js",
+  "scripts": {
+    "test": "jest --testMatch=**/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amiteshtoharya4/tameofthrones.git"
+  },
+  "keywords": [
+    "fun"
+  ],
+  "author": "Amitesh Arya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amiteshtoharya4/tameofthrones/issues"
+  },
+  "homepage": "https://github.com/amiteshtoharya4/tameofthrones#readme",
+  "devDependencies": {
+    "jest": "^24.9.0"
+  }
+}
