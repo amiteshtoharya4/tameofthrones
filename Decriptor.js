@@ -1,22 +1,36 @@
 const ASCII_OF_a = 97;
-const NUMBER_OF_LETTERS = 26;
+const TOTAL_NUMBER_OF_LETTERS = 26;
 
 module.exports = class Decriptor{
     constructor(sender){
-        this.key = sender.length;
+        this.decryptionKey = sender.length;
+    }
+
+    decryptLetter(positionOfEncryptedLetter) {
+        return (positionOfEncryptedLetter + TOTAL_NUMBER_OF_LETTERS - this.decryptionKey) % TOTAL_NUMBER_OF_LETTERS;
+    }
+
+    getPositionOfEncryptedLetterInLetterSequence(encryptedLetter){
+        const asciiOfEncryptedLetter = encryptedLetter.charCodeAt(0);
+        return asciiOfEncryptedLetter - ASCII_OF_a;
+    }
+
+    getDecryptedLetter(encryptedLetter){
+        const positionOfEncryptedLetter = this.getPositionOfEncryptedLetterInLetterSequence(encryptedLetter);        
+        const positionOfDecryptedLetter = this.decryptLetter(positionOfEncryptedLetter);
+        const asciiOfDecryptedLetter = positionOfDecryptedLetter + ASCII_OF_a;
+        return String.fromCharCode(asciiOfDecryptedLetter);
     }
 
     decriptWord(word){
         let decriptedWord = '';
         for(const letter of word){
-            const asciiOfEncryptedLetter = letter.charCodeAt(0);
-            const encryptedLetter = asciiOfEncryptedLetter - ASCII_OF_a;
+            const decryptedLetter = this.getDecryptedLetter(letter);
 
-            const decryptedLetter = (encryptedLetter + NUMBER_OF_LETTERS - this.key) % NUMBER_OF_LETTERS;
-            const asciiOfDecryptedLetter = decryptedLetter + ASCII_OF_a;
-
-            decriptedWord = decriptedWord + String.fromCharCode(asciiOfDecryptedLetter);
+            decriptedWord = decriptedWord + decryptedLetter;
         }
         return decriptedWord;
     }
+
+    
 }
