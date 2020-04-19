@@ -4,7 +4,8 @@
   "description": "",
   "main": "geektrust.js",
   "scripts": {
-    "test": "jest --testMatch=**/*.test.js"
+    "test": "jest --testMatch=**/*.test.js",
+    "start": "node ./geektrust.js"
   },
   "repository": {
     "type": "git",
