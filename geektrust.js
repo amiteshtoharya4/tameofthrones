@@ -1,22 +1,11 @@
-const readline = require('readline');
 const fs = require('fs');
 const KingdomCoordinator = require('./KingdomCoordinator');
+const InputParser = require('./InputParser');
 
-const kingdomCoordinator = new KingdomCoordinator();
-const readlineInterface = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+const inputParser = new InputParser();
+const kingdomCoordinator = new KingdomCoordinator(inputParser);
 
-readlineInterface.on('line', (line => {
-    const inputString = fs.readFileSync(line).toString();
-    const inputLines = inputString.split('\n');
-    let recieverKingdoms = [];
-    let messages = [];
-    inputLines.forEach((line) => {
-        const kingdomAndMessageMap = line.split(' ');
-        recieverKingdoms.push(kingdomAndMessageMap[0]);
-        messages.push(kingdomAndMessageMap[1])
-    });
-    kingdomCoordinator.showResult('SPACE', recieverKingdoms, messages);
-}));
+const inputFile = process.argv[2];
+const inputString = fs.readFileSync(inputFile).toString();
+
+kingdomCoordinator.checkAndShowRuler('SPACE', inputString);

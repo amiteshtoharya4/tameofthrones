@@ -44,12 +44,16 @@ describe('Kingdom Coordinator', () => {
                     return fireKingdomMock;
             }
         });
+        inputParserMock = {
+            parse: jest.fn()
+        };
         Decryptor.mockImplementation(() => decryptorMock);
-        kingdomCoordinator = new KingdomCoordinator();
+        kingdomCoordinator = new KingdomCoordinator(inputParserMock);
     });
 
     beforeEach(() => {
         consoleSpy = jest.spyOn(global.console, 'log');
+        inputParserMock.parse.mockImplementation(() => ({recieverKingdoms: [], messages: []}))
         fireKingdomMock.isImpressed.mockImplementation(() => true);
         spaceKingdomMock.isImpressed.mockImplementation(() => true);
         waterKingdomMock.isImpressed.mockImplementation(() => true);
@@ -75,16 +79,19 @@ describe('Kingdom Coordinator', () => {
     it('should print ruler with allys if more than 2 kingdoms are impressed', () => {
         fireKingdomMock.isImpressed.mockImplementation(() => false);
         iceKingdomMock.isImpressed.mockImplementation(() => false);
+        const kingdomAndMessageInputString = 'fire asdfasdf\nice asdfasdf\nWater SADAS\nland dsa\nair fdsa';
         const messages = ['asdfasdf', 'asdfasdf', 'SADAS', 'dsa', 'fdsa'];
         const recieverKingdoms = ['fire', 'ice', 'Water', 'land', 'air'];
+        inputParserMock.parse.mockImplementation(() => ({recieverKingdoms, messages}));
 
-        kingdomCoordinator.checkAndShowRuler('SPACE', recieverKingdoms, messages);
+        kingdomCoordinator.checkAndShowRuler('SPACE', kingdomAndMessageInputString);
 
         expect(fireKingdomMock.isImpressed).toHaveBeenCalledWith(messages[0]);
         expect(iceKingdomMock.isImpressed).toHaveBeenCalledWith(messages[1]);
         expect(waterKingdomMock.isImpressed).toHaveBeenCalledWith(messages[2]);
         expect(landKingdomMock.isImpressed).toHaveBeenCalledWith(messages[3]);
         expect(airKingdomMock.isImpressed).toHaveBeenCalledWith(messages[4]);
+        expect(inputParserMock.parse).toHaveBeenCalledWith(kingdomAndMessageInputString);
         expect(consoleSpy).toHaveBeenCalledWith('SPACE Water land air');
     });
 
@@ -93,16 +100,37 @@ describe('Kingdom Coordinator', () => {
         iceKingdomMock.isImpressed.mockImplementation(() => false);
         airKingdomMock.isImpressed.mockImplementation(() => false);
         landKingdomMock.isImpressed.mockImplementation(() => false);
+        const kingdomAndMessageInputString = 'fire asdfasdf\nice asdfasdf\nWater SADAS\nland dsa\nair fdsa';
         const messages = ['asdfasdf', 'asdfasdf', 'SADAS', 'dsa', 'fdsa'];
         const recieverKingdoms = ['fire', 'ice', 'Water', 'land', 'air'];
+        inputParserMock.parse.mockImplementation(() => ({recieverKingdoms, messages}));
 
-        kingdomCoordinator.checkAndShowRuler('SPACE', recieverKingdoms, messages);
+        kingdomCoordinator.checkAndShowRuler('SPACE', kingdomAndMessageInputString);
 
         expect(fireKingdomMock.isImpressed).toHaveBeenCalledWith(messages[0]);
         expect(iceKingdomMock.isImpressed).toHaveBeenCalledWith(messages[1]);
         expect(waterKingdomMock.isImpressed).toHaveBeenCalledWith(messages[2]);
         expect(landKingdomMock.isImpressed).toHaveBeenCalledWith(messages[3]);
         expect(airKingdomMock.isImpressed).toHaveBeenCalledWith(messages[4]);
+        expect(consoleSpy).toHaveBeenCalledWith('NONE');
+        expect(inputParserMock.parse).toHaveBeenCalledWith(kingdomAndMessageInputString);
+    });
+
+    it('should consider a kingdom only once in ruler descision', () => {
+        airKingdomMock.isImpressed.mockImplementation(() => false);
+        const messages = ['asdfasdf', 'asdfasdf', 'SADAS', 'dsa', 'fdsa'];
+        const recieverKingdoms = ['fire', 'fire', 'fire', 'fire', 'air'];
+        const kingdomAndMessageInputString = 'fire asdfasdf\nfire asdfasdf\nfire SADAS\nfire dsa\nair fdsa';
+        inputParserMock.parse.mockImplementation(() => ({recieverKingdoms, messages}));
+
+        kingdomCoordinator.checkAndShowRuler('SPACE', kingdomAndMessageInputString);
+
+        expect(fireKingdomMock.isImpressed).toHaveBeenCalledWith(messages[0]);
+        expect(fireKingdomMock.isImpressed).toHaveBeenCalledWith(messages[1]);
+        expect(fireKingdomMock.isImpressed).toHaveBeenCalledWith(messages[2]);
+        expect(fireKingdomMock.isImpressed).toHaveBeenCalledWith(messages[3]);
+        expect(airKingdomMock.isImpressed).toHaveBeenCalledWith(messages[4]);
+        expect(inputParserMock.parse).toHaveBeenCalledWith(kingdomAndMessageInputString);
         expect(consoleSpy).toHaveBeenCalledWith('NONE');
     });
 });

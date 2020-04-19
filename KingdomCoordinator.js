@@ -2,8 +2,9 @@ const Kingdom = require('./Kingdom');
 const Decryptor = require('./Decriptor');
 
 module.exports = class KingdomCoordinator {
-    constructor(){
+    constructor(inputParser){
         const decryptor = new Decryptor();
+        this.inputParser = inputParser;
         this.kingdomInstanceMap = new Map()
             .set('space', new Kingdom('space', 'gorilla', decryptor))
             .set('land', new Kingdom('land', 'panda', decryptor))
@@ -21,14 +22,16 @@ module.exports = class KingdomCoordinator {
         console.log('NONE');
     }
 
-    checkAndShowRuler(sender, recieverKingdoms, messages) {
+    checkAndShowRuler(sender, kingdomAndMessageInputString) {
         const impressedKingdoms = [];
+        const {recieverKingdoms, messages} = this.inputParser.parse(kingdomAndMessageInputString)
         recieverKingdoms.forEach((recieverKingdom, index) => {
             const recieverKingdomInstance = this.kingdomInstanceMap.get(recieverKingdom.toLowerCase());
             if(recieverKingdomInstance.isImpressed(messages[index])){
                 impressedKingdoms.push(recieverKingdom);
             }
         });
-        this.showResult(sender, impressedKingdoms);
+        const uniqueImpressedKingdoms = Array.from(new Set(impressedKingdoms));
+        this.showResult(sender, uniqueImpressedKingdoms);
     }
 }
