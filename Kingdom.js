@@ -7,7 +7,7 @@ module.exports = class Kingdom {
 
     isImpressed(message){
         let lowerCaseMessage = message.toLowerCase();
-        let decriptedMessage = this.decriptor.decriptWord(lowerCaseMessage);
+        let decriptedMessage = this.decriptor.decriptWord(lowerCaseMessage, this.emblem.length);
         
         for(const letter of this.emblem){
             if(decriptedMessage.indexOf(letter) == -1){
