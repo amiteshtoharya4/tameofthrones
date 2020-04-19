@@ -13,6 +13,14 @@ module.exports = class KingdomCoordinator {
             .set('fire', new Kingdom('fire', 'dragon', decryptor));
     }
 
+    showResult(sender, impressedKingdoms) {
+        if(impressedKingdoms.length >= 3){
+            console.log(`${sender} ${impressedKingdoms.join(' ')}`);
+            return;
+        }
+        console.log('NONE');
+    }
+
     checkAndShowRuler(sender, recieverKingdoms, messages) {
         const impressedKingdoms = [];
         recieverKingdoms.forEach((recieverKingdom, index) => {
@@ -21,10 +29,6 @@ module.exports = class KingdomCoordinator {
                 impressedKingdoms.push(recieverKingdom);
             }
         });
-        if(impressedKingdoms.length >= 3){
-            console.log(`${sender} ${impressedKingdoms.join(' ')}`);
-            return;
-        }
-        console.log('NONE');
+        this.showResult(sender, impressedKingdoms);
     }
 }
