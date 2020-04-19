@@ -1,18 +1,20 @@
 module.exports = class Kingdom {
-    constructor(name, emblem){
+    constructor(name, emblem, decriptor){
         this.name = name.toLowerCase(),
-        this.emblem = emblem.toLowerCase()
+        this.emblem = emblem.toLowerCase(),
+        this.decriptor = decriptor
     }
 
     isImpressed(message){
         let lowerCaseMessage = message.toLowerCase();
+        let decriptedMessage = this.decriptor.decriptWord(lowerCaseMessage);
         
         for(const letter of this.emblem){
-            if(lowerCaseMessage.indexOf(letter) == -1){
+            if(decriptedMessage.indexOf(letter) == -1){
                 return false;
             }
 
-            lowerCaseMessage = lowerCaseMessage.replace(letter, '');
+            decriptedMessage = decriptedMessage.replace(letter, '');
         }
         return true;
     }
